@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class GridMovement : MonoBehaviour
 {
-    [Header("Grid Managers")]
+    [Header("Managers")]
     [SerializeField] private GridManager _gridManager;
 	[SerializeField] private AttackManager _attackManager;
 
 	[Header("Tile Choice")]
-    [SerializeField] private Vector2Int _gridPos; 
+    private Vector2Int _gridPos = new Vector2Int(4, 4);
 
-    void Update()
+	void Update()
     {
 		// Moving the player while checking if the space they wish to move to exists. 
         if(Input.GetKeyDown("w"))
@@ -42,9 +42,9 @@ public class GridMovement : MonoBehaviour
         transform.position = tile.transform.position;
 
 		// Starting the next round.
-		if (Input.GetKeyDown("space"))
+		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			_attackManager.StartRound();
+			StartCoroutine(_attackManager.StartRound());
 		}
     }
 }

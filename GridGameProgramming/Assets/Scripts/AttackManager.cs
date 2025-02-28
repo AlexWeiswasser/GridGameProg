@@ -5,70 +5,92 @@ using UnityEngine;
 public class AttackManager : MonoBehaviour
 {
     [Header("Round Controls")]
-	[SerializeField] private float attackDelay = 2f;
+	[SerializeField] private float attackDelay = 1.5f;
 	[SerializeField] private int attacksInRound = 5;
 	private bool roundInSession = false;
-    private bool canAttack = true;
     private int attackType;
 
-    // Starts the next round upon player discrection if one isn't already going on.  
-	public void StartRound()
+	[Header("Managers")]
+	[SerializeField] private GridManager _gridManager;
+
+	// Starts the next round upon player discrection, if one isn't already going on.  
+	public IEnumerator StartRound()
+	{
+		if (roundInSession) yield break;
+		roundInSession = true;
+
+		Debug.Log("Round start!");
+
+		int attackNumber = 0;
+
+		while (attackNumber < attacksInRound)
+		{
+			attackNumber++;
+
+			attackType = Random.Range(0, 3);
+
+			switch (attackType)
+			{
+				case 0:
+					LineAttack();
+					break;
+				case 1:
+					BombAttack();
+					break;
+				case 2:
+					int numberOfPoints = Random.Range(30, 40);
+					for(int i = 0; i < numberOfPoints; i++)
+						PointAttack();
+					break;
+			}
+
+			yield return new WaitForSeconds(attackDelay);
+		}
+
+		Debug.Log("Round end!");
+
+		roundInSession = false;
+		attacksInRound++;
+		attackDelay = Mathf.Max(.1f, attackDelay - 0.1f); 
+	}
+
+	// Makes a few lines of tiles dangerous. 
+	void LineAttack()
     {
-        if (roundInSession) return;
-        roundInSession = true;
+		int tempNumb = Random.Range(0, 9);
 
-        // Determines which attack number we are on for the sake of determining the round end. 
-        int attackNumber = 0;
+		for (int i = 0; i < 9; i++)
+		{
+			StartCoroutine(_gridManager.TileAttack(i, tempNumb));
+			StartCoroutine(_gridManager.TileAttack(tempNumb, i));
+		}
+	}
 
-        // Selects and activates the current attack.
-        while (attackNumber < attacksInRound)
-        {
-            if (canAttack)
-            {
-                canAttack = false; 
-                attackNumber++;
+	// Makes a blurb of tiles dangerous. 
+	void BombAttack()
+	{
+		int tileX = Random.Range(2, 7);
+		int tileY = Random.Range(2, 7);
 
-                attackType = Random.Range(0, 2);
+		int[] offsets = { -2, -1, 0, 1, 2 };
 
-                switch (attackType)
-                {
-                    case 0:
-                        LineAttack();
-                        break;
-                    case 1:
-                        BombAttack();
-                        break;
-                    case 2:
-                        PointAttack();
-                        break;
-                }
-            }
-            StartCoroutine(AttackCooldown());
-        }
+		foreach (int offsetX in offsets)
+		{
+			foreach (int offsetY in offsets)
+			{
+				StartCoroutine(_gridManager.TileAttack(tileY + offsetY, tileX + offsetX)); 
+			}
+		}
+	}
 
-        // Turns off the current round, and makes the next more difficult. 
-        roundInSession = false;
-        attacksInRound++;
-        attackDelay -= .1f;
-    }
 
-    // Allows the grid to attack again once the cooldown has elapsed. 
-    IEnumerator AttackCooldown()
+	// Quickly makes a random grouping of tiles dangerous. 
+	void PointAttack()
     {
-        yield return new WaitForSeconds(attackDelay);
-        canAttack = true; 
-    }
+		int tileX, tileY;
+        tileX = Random.Range(0, _gridManager.numRows);
+        tileY = Random.Range(0, _gridManager.numColumns);
 
-    void LineAttack()
-    {
-
-    }
-    void BombAttack()
-    {
-
-    }
-    void PointAttack()
-    {
-
-    }
+		StartCoroutine(_gridManager.TileAttack(tileY, tileX));
+	}
 }

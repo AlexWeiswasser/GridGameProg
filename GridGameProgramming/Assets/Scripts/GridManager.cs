@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 
 public class GridManager : MonoBehaviour
@@ -10,20 +11,20 @@ public class GridManager : MonoBehaviour
     private List<GameObject> _tiles = new List<GameObject>();
 
     [Header("Grid Data")]
-    [SerializeField] private int numRows = 8;
-    [SerializeField] private int numColums = 8;
+    [SerializeField] public int numRows = 9;
+    [SerializeField] public int numColumns = 9;
     [SerializeField] private Vector2 tileSize = Vector2.one;
     [SerializeField] private Vector2 padding = new Vector2(.1f, .1f);
 
     void Start()
     {
         // Determining how large the grid storing array should be. 
-        _tiles.Capacity = numRows * numColums;
+        _tiles.Capacity = numRows * numColumns;
 
         // Making the grid, and adding every new tile to the list of tiles. 
         for (int row = 0; row < numRows; row++)
         {
-            for(int col = 0; col < numColums; col++)
+            for(int col = 0; col < numColumns; col++)
             {
                 Vector2 tilePos = new Vector2(col * (tileSize.x + padding.x), row * (tileSize.x + padding.x));
                 GameObject tile = Instantiate(_tilePrefab, tilePos, Quaternion.identity, transform);
@@ -32,13 +33,34 @@ public class GridManager : MonoBehaviour
         }
 
         // Centering the grid. 
-        transform.position = new Vector2(transform.position.x - 4, transform.position.y - 4);
+        transform.position = new Vector2(transform.position.x - (float)numRows/2, transform.position.y - (float)numColumns /2);
     }
 
     // A function that returns the tile at the inputed grid coordinate.
     public GameObject GetTile(int column, int row)
     {
-        if (row >= numRows || row < 0 || column >= numColums || column < 0) return null;
-        return _tiles[(row * numColums) + column];
+        if (row >= numRows || row < 0 || column >= numColumns || column < 0) return null;
+        return _tiles[(row * numColumns) + column];
     }
+
+    // Obtains a tile and delay, and makes that tile dangerous after that delay. 
+    public IEnumerator TileAttack(int column, int row)
+    {
+		if (row >= numRows || row < 0 || column >= numColumns || column < 0) yield break;
+
+		GameObject tile = _tiles[(row * numColumns) + column];
+        TileScript tileScript = tile.GetComponent<TileScript>();
+        SpriteRenderer tileRend = tile.GetComponent<SpriteRenderer>();
+
+        if (tileRend.color == Color.white)
+        {
+            tileScript.dangerTime += .75f;
+
+			tileRend.color = Color.gray;
+
+            yield return new WaitForSeconds(.5f);
+
+            tileRend.color = Color.red;
+        }
+	}
 }
