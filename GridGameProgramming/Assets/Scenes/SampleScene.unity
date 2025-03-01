@@ -155,9 +155,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tilePrefab: {fileID: 8640561639552806314, guid: 9329afe3187e27a46a02f7495c6ee88c, type: 3}
   numRows: 9
-  numColums: 9
+  numColumns: 9
   tileSize: {x: 1, y: 1}
   padding: {x: 0.1, y: 0.1}
+  _attackManager: {fileID: 266406806}
 --- !u!4 &266406805
 Transform:
   m_ObjectHideFlags: 0
@@ -185,11 +186,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8527c6c000fde043ad1a1f0304f7c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDelay: 1
-  attacksInRound: 5
-  pointAttackDelay: 0.5
-  lineAttackDelay: 0.5
-  bombAttackDelay: 0.5
+  attackDelay: 1.5
+  attacksInRound: 1
   _gridManager: {fileID: 266406804}
 --- !u!1 &519420028
 GameObject:

@@ -5,8 +5,8 @@ using UnityEngine;
 public class AttackManager : MonoBehaviour
 {
     [Header("Round Controls")]
-	[SerializeField] private float attackDelay = 1.5f;
-	[SerializeField] private int attacksInRound = 5;
+	[SerializeField] public float attackDelay = 1.5f;
+	[SerializeField] private int attacksInRound = 1;
 	private bool roundInSession = false;
     private int attackType;
 
@@ -48,10 +48,10 @@ public class AttackManager : MonoBehaviour
 		}
 
 		Debug.Log("Round end!");
-
+		attackDelay -= .075f;
+		attackDelay = Mathf.Clamp(attackDelay, .4f, Mathf.Infinity);
 		roundInSession = false;
 		attacksInRound++;
-		attackDelay = Mathf.Max(.1f, attackDelay - 0.1f); 
 	}
 
 	// Makes a few lines of tiles dangerous. 

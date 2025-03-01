@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,9 @@ public class GridMovement : MonoBehaviour
 
 	[Header("Tile Choice")]
     private Vector2Int _gridPos = new Vector2Int(4, 4);
+
+	[Header("Variables")]
+	private bool dead = false; 
 
 	void Update()
     {
@@ -38,13 +42,17 @@ public class GridMovement : MonoBehaviour
 		// Current tile. 
 		GameObject tile = _gridManager.GetTile(_gridPos.x, _gridPos.y);
 
-        // Moving player to match the current tile.
-        transform.position = tile.transform.position;
+		// Moving player to match the current tile.
+		transform.position = Vector3.Lerp(transform.position, tile.transform.position, Time.deltaTime * 45);
 
 		// Starting the next round.
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
 			StartCoroutine(_attackManager.StartRound());
 		}
+
+		// Checking collision.
+		if (tile.GetComponent<SpriteRenderer>().color == Color.red)
+			dead = true;
     }
 }

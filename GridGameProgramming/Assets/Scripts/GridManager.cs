@@ -15,6 +15,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] public int numColumns = 9;
     [SerializeField] private Vector2 tileSize = Vector2.one;
     [SerializeField] private Vector2 padding = new Vector2(.1f, .1f);
+    [SerializeField] private AttackManager _attackManager;
 
     void Start()
     {
@@ -49,18 +50,19 @@ public class GridManager : MonoBehaviour
 		if (row >= numRows || row < 0 || column >= numColumns || column < 0) yield break;
 
 		GameObject tile = _tiles[(row * numColumns) + column];
-        TileScript tileScript = tile.GetComponent<TileScript>();
         SpriteRenderer tileRend = tile.GetComponent<SpriteRenderer>();
 
         if (tileRend.color == Color.white)
         {
-            tileScript.dangerTime += .75f;
-
 			tileRend.color = Color.gray;
-
-            yield return new WaitForSeconds(.5f);
+            
+            yield return new WaitForSeconds(_attackManager.attackDelay/2);
 
             tileRend.color = Color.red;
-        }
+
+			yield return new WaitForSeconds((_attackManager.attackDelay/2) - .01f);
+
+            tileRend.color = Color.white;
+		}
 	}
 }
