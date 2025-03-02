@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GridMovement : MonoBehaviour
@@ -13,28 +14,35 @@ public class GridMovement : MonoBehaviour
     private Vector2Int _gridPos = new Vector2Int(4, 4);
 
 	[Header("Variables")]
-	private bool dead = false; 
+	private bool _dead = false;
+	private bool _gameStarted = false;
+	private bool _playerStarted = false;
+	public int points = 0; 
 
 	void Update()
     {
 		// Moving the player while checking if the space they wish to move to exists. 
         if(Input.GetKeyDown("w"))
         {
+			if(!_playerStarted) _playerStarted = true;
 			if (_gridManager.GetTile(_gridPos.x, _gridPos.y + 1) == null) return;
             _gridPos.y++;
         }
 		if (Input.GetKeyDown("a"))
 		{
+			if (!_playerStarted) _playerStarted = true;
 			if (_gridManager.GetTile(_gridPos.x - 1, _gridPos.y) == null) return;
 			_gridPos.x--;
 		}
 		if (Input.GetKeyDown("s"))
 		{
+			if (!_playerStarted) _playerStarted = true;
 			if (_gridManager.GetTile(_gridPos.x, _gridPos.y - 1) == null) return;
 			_gridPos.y--;
 		}
 		if (Input.GetKeyDown("d"))
 		{
+			if (!_playerStarted) _playerStarted = true;
 			if (_gridManager.GetTile(_gridPos.x + 1, _gridPos.y) == null) return;
 			_gridPos.x++;
 		}
@@ -45,14 +53,25 @@ public class GridMovement : MonoBehaviour
 		// Moving player to match the current tile.
 		transform.position = Vector3.Lerp(transform.position, tile.transform.position, Time.deltaTime * 45);
 
-		// Starting the next round.
-		if (Input.GetKeyDown(KeyCode.Space))
+		// Starting the game.
+		if (_playerStarted && !_gameStarted)
 		{
-			StartCoroutine(_attackManager.StartRound());
+			StartCoroutine(_attackManager.StartGame());
+			_gameStarted = true;
 		}
 
 		// Checking collision.
 		if (tile.GetComponent<SpriteRenderer>().color == Color.red)
-			dead = true;
+			_dead = true;
+
+		Debug.Log("Current points are " + points + ". Dead status: " + _dead);
     }
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+		if (collision.gameObject.CompareTag("Points"))
+			points += 3;
+		else 
+			_dead = true;
+		Destroy(collision.gameObject);
+	}
 }

@@ -13,7 +13,7 @@ public class GridManager : MonoBehaviour
     [Header("Grid Data")]
     [SerializeField] public int numRows = 9;
     [SerializeField] public int numColumns = 9;
-    [SerializeField] private Vector2 tileSize = Vector2.one;
+    [SerializeField] public Vector2 tileSize = Vector2.one;
     [SerializeField] private Vector2 padding = new Vector2(.1f, .1f);
     [SerializeField] private AttackManager _attackManager;
 

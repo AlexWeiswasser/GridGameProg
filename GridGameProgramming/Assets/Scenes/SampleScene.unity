@@ -187,8 +187,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackDelay: 1.5
-  attacksInRound: 1
+  attacksInRound: 5
   _gridManager: {fileID: 266406804}
+  _gridMovement: {fileID: 1662755229}
+  _bullet: {fileID: 3189265513164681786, guid: b5ef233c3ed4a354f81a64d9441ccaaa, type: 3}
+  _pointOrb: {fileID: 1211852919787851132, guid: a82abc429ebe8844690b3a2a7b80d5fd, type: 3}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,7 +245,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -284,6 +287,7 @@ GameObject:
   - component: {fileID: 1662755231}
   - component: {fileID: 1662755230}
   - component: {fileID: 1662755229}
+  - component: {fileID: 1662755232}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -305,6 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gridManager: {fileID: 266406804}
   _attackManager: {fileID: 266406806}
+  points: 0
 --- !u!212 &1662755230
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -347,7 +352,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.754717, g: 0.18155926, b: 0.18155926, a: 1}
+  m_Color: {r: 0.07861614, g: 0.3517981, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -372,3 +377,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1662755232
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662755228}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
