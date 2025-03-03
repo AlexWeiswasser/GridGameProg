@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class AttackManager : MonoBehaviour
 {
     [Header("Round Controls")]
-	[SerializeField] public float attackDelay = 1.5f;
+	[SerializeField] public float attackDelay = 2f;
 	[SerializeField] private int attacksInRound = 5;
+	[SerializeField] private int _roundNumber = 1; 
     private int attackType;
 
 	[Header("Scripts")]
@@ -17,20 +19,26 @@ public class AttackManager : MonoBehaviour
 	[SerializeField] private GameObject _bullet;
 	[SerializeField] private GameObject _pointOrb;
 
-	// Starts the game upon player discrection, and continues it, while slowly increasing the speed.  
-	public IEnumerator StartGame()
+	[Header("Text")]
+	[SerializeField] private TextMeshProUGUI _roundText;
+
+    // Starts the game upon player discrection, and continues it, while slowly increasing the speed.  
+    public IEnumerator StartGame()
 	{
 		int attackNumber = 0;
 
-		while (attackNumber < attacksInRound)
+        int firstBullet = Random.Range(0, attacksInRound);
+        int secondBullet = Random.Range(0, attacksInRound);
+
+        int pointSpawn = Random.Range(0, attacksInRound);
+
+        while (attackNumber < attacksInRound)
 		{
-			// Timing related things.
-			attackNumber++;
+			// Update the round text.
+            _roundText.text = "Round: " + _roundNumber;
 
-			int firstBullet = Random.Range(0, attacksInRound);
-			int secondBullet = Random.Range(0, attacksInRound);
-
-			int pointSpawn = Random.Range(0, attacksInRound);
+            // Timing related things.
+            attackNumber++;
 
 			// Attack Related things.
 			attackType = Random.Range(0, 3);
@@ -54,15 +62,19 @@ public class AttackManager : MonoBehaviour
 			if (attackNumber == firstBullet || attackNumber == secondBullet)
 			{
 				GenerateBullets();
-				GeneratePointBall();
 			}
 
-			yield return new WaitForSeconds(attackDelay);
+			if (attackNumber == pointSpawn)
+                GeneratePointBall();
+
+            yield return new WaitForSeconds(attackDelay);
 		}
 
+		// Update point and round number, and make the game harder. 
 		attackDelay -= .075f;
 		attackDelay = Mathf.Clamp(attackDelay, .4f, Mathf.Infinity);
 		_gridMovement.points++;
+		_roundNumber++;
 		
 		StartCoroutine(StartGame());
 	}

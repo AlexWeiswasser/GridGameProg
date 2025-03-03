@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -17,10 +18,20 @@ public class GridMovement : MonoBehaviour
 	private bool _dead = false;
 	private bool _gameStarted = false;
 	private bool _playerStarted = false;
-	public int points = 0; 
+	public int points = 0;
+	private int currentPoints = 0;
 
-	void Update()
+	[Header("Text")]
+    [SerializeField] private TextMeshProUGUI _pointsText;
+
+    void Update()
     {
+		if (currentPoints != points)
+		{
+            _pointsText.text = "Points: " + points;
+            currentPoints = points;
+		}
+
 		// Moving the player while checking if the space they wish to move to exists. 
         if(Input.GetKeyDown("w"))
         {
@@ -64,7 +75,7 @@ public class GridMovement : MonoBehaviour
 		if (tile.GetComponent<SpriteRenderer>().color == Color.red)
 			_dead = true;
 
-		Debug.Log("Current points are " + points + ". Dead status: " + _dead);
+		Debug.Log("Dead status: " + _dead);
     }
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
