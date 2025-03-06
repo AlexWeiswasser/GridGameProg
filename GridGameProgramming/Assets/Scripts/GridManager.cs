@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
+using DG.Tweening;
 
 public class GridManager : MonoBehaviour
 {
@@ -60,7 +61,9 @@ public class GridManager : MonoBehaviour
 
             tileRend.color = Color.red;
 
-			yield return new WaitForSeconds((_attackManager.attackDelay/2) - .01f);
+            yield return tile.transform.DOPunchScale(new Vector3(.15f, .15f, .15f), (_attackManager.attackDelay / 2) - .01f, 1, 1).WaitForCompletion();
+
+            //yield return tileRend.DOColor()
 
             tileRend.color = Color.white;
 		}
