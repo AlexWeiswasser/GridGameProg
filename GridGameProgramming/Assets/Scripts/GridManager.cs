@@ -55,17 +55,13 @@ public class GridManager : MonoBehaviour
 
         if (tileRend.color == Color.white)
         {
-			tileRend.color = Color.gray;
-            
-            yield return new WaitForSeconds(_attackManager.attackDelay/2);
+			yield return tileRend.DOColor(Color.gray, _attackManager.attackDelay / 2).WaitForCompletion();
 
             tileRend.color = Color.red;
 
-            yield return tile.transform.DOPunchScale(new Vector3(.15f, .15f, .15f), (_attackManager.attackDelay / 2) - .01f, 1, 1).WaitForCompletion();
+			yield return tile.transform.DOPunchScale(new Vector3(.15f, .15f, .15f), (_attackManager.attackDelay / 2) - .16f, 1, 1).WaitForCompletion();
 
-            //yield return tileRend.DOColor()
-
-            tileRend.color = Color.white;
+			yield return tileRend.DOColor(Color.white, .15f);
 		}
 	}
 }

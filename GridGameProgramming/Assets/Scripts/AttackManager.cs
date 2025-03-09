@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -50,7 +51,7 @@ public class AttackManager : MonoBehaviour
 					LineAttack();
 					break;
 				case 1:
-					CircleAttack();
+					DoughnutAttack();
 					break;
 				case 2:
 					int numberOfPoints = Random.Range(40, 50);
@@ -92,7 +93,7 @@ public class AttackManager : MonoBehaviour
 	}
 
 	// Makes a blurb of tiles dangerous. 
-	void CircleAttack()
+	void DoughnutAttack()
 	{
 		int tileX = Random.Range(2, 7);
 		int tileY = Random.Range(2, 7);
