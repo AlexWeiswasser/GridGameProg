@@ -182,6 +182,5 @@ public class AttackManager : MonoBehaviour
 		Vector2 pointPos = new Vector2(_gridManager.GetTile(tileY, tileX).transform.position.x, _gridManager.GetTile(tileY, tileX).transform.position.y);
 
 		GameObject PointOrb = Instantiate(_pointOrb, pointPos, Quaternion.identity);
-		Destroy(PointOrb, 3f);
 	}
 }
