@@ -19,7 +19,7 @@ public class GreenOrbScript : MonoBehaviour
         lifetime = 100f;
         gameObject.GetComponent<Collider2D>().enabled = false;
         transform.DOScale(transform.localScale * 100f, 3f);
-        gameObject.GetComponent<SpriteRenderer>().DOFade(0, 3f);
+        gameObject.GetComponent<SpriteRenderer>().DOFade(0, 1f);
         Destroy(gameObject, 3f);
     }
 }

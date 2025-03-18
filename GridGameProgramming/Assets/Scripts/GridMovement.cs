@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GridMovement : MonoBehaviour
 {
@@ -31,8 +32,9 @@ public class GridMovement : MonoBehaviour
 
     private void Start()
     {
-        // set player position to middle tile
-    }
+		GameObject tile = _gridManager.GetTile(_gridPos.x, _gridPos.y);
+		_moveTween = transform.DOMove(tile.transform.position, .001f).SetEase(Ease.Linear);
+	}
 
     void Update()
     {
@@ -43,7 +45,7 @@ public class GridMovement : MonoBehaviour
 		}
 
 		// Moving the player while checking if the space they wish to move to exists. 
-        if(Input.GetKeyDown("w"))// Prevent input if tween be happeneing)
+        if(Input.GetKeyDown("w"))
         {
             if (_moveTween != null && _moveTween.IsActive())
                 return;
@@ -54,9 +56,9 @@ public class GridMovement : MonoBehaviour
 
             GameObject tile = _gridManager.GetTile(_gridPos.x, _gridPos.y);
 
-            _moveTween = transform.DOMove(tile.transform.position, .1f).SetEase(Ease.Linear);
-        }
-        if (Input.GetKeyDown("a"))// Prevent input if tween be happeneing)
+			_moveTween = transform.DOMove(tile.transform.position, .075f).SetEase(Ease.OutBounce);
+		}
+		if (Input.GetKeyDown("a"))
         {
             if (_moveTween != null && _moveTween.IsActive())
                 return;
@@ -67,9 +69,9 @@ public class GridMovement : MonoBehaviour
 
             GameObject tile = _gridManager.GetTile(_gridPos.x, _gridPos.y);
 
-            _moveTween = transform.DOMove(tile.transform.position, .1f).SetEase(Ease.Linear);
-        }
-        if (Input.GetKeyDown("s"))// Prevent input if tween be happeneing)
+			_moveTween = transform.DOMove(tile.transform.position, .075f).SetEase(Ease.OutBounce);
+		}
+		if (Input.GetKeyDown("s"))
         {
             if (_moveTween != null && _moveTween.IsActive())
                 return;
@@ -80,9 +82,9 @@ public class GridMovement : MonoBehaviour
 
             GameObject tile = _gridManager.GetTile(_gridPos.x, _gridPos.y);
 
-            _moveTween = transform.DOMove(tile.transform.position, .1f).SetEase(Ease.Linear);
-        }
-        if (Input.GetKeyDown("d")) // Prevent input if tween be happeneing)
+			_moveTween = transform.DOMove(tile.transform.position, .075f).SetEase(Ease.OutBounce);
+		}
+		if (Input.GetKeyDown("d")) 
 		{
             if (_moveTween != null && _moveTween.IsActive())
                 return;
@@ -93,8 +95,8 @@ public class GridMovement : MonoBehaviour
 
             GameObject tile = _gridManager.GetTile(_gridPos.x, _gridPos.y);
 
-            _moveTween = transform.DOMove(tile.transform.position, .1f).SetEase(Ease.Linear);
-        }
+			_moveTween = transform.DOMove(tile.transform.position, .075f).SetEase(Ease.OutBounce);
+		}
 
 		// Current tile. 
 		GameObject tile2 = _gridManager.GetTile(_gridPos.x, _gridPos.y);
@@ -112,11 +114,22 @@ public class GridMovement : MonoBehaviour
 
 		// When player dies
 		if (_dead && !_animating)
-		{ 
+		{
+			PlayerPrefs.SetInt("score", points);
+			if (PlayerPrefs.HasKey("HighScore"))
+			{
+				if (points > PlayerPrefs.GetInt("HighScore"))
+					PlayerPrefs.SetInt("HighScore", points);
+			}
+			else
+				PlayerPrefs.SetInt("HighScore", points);
+			PlayerPrefs.Save();
+
 			_animating = true;
-			
-			//Destroy(gameObject, 1f);
-        }
+			gameObject.GetComponent<Collider2D>().enabled = false;
+			transform.DOScale(transform.localScale * 100f, 1f);
+			gameObject.GetComponent<SpriteRenderer>().DOFade(0, 1f).onComplete = toEndScene;
+		}
     }
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
@@ -128,5 +141,11 @@ public class GridMovement : MonoBehaviour
         }
 		else 
 			_dead = true;
+	}
+
+	public void toEndScene()
+	{
+		DOTween.KillAll(gameObject);
+		SceneManager.LoadScene(2);
 	}
 }
